@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Performance Tracker</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="header-title">Daily Tracker</h1>
+                <p class="header-date" id="currentDate"></p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Performance Summary Section -->
+            <section class="performance-section">
+                <div class="performance-grid">
+                    <!-- Completion Card -->
+                    <div class="card performance-card">
+                        <div class="card-header">
+                            <h2 class="card-title">Today's Progress</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="progress-ring-container">
+                                <svg class="progress-ring" width="120" height="120">
+                                    <circle class="progress-ring-bg" cx="60" cy="60" r="54"></circle>
+                                    <circle class="progress-ring-fill" cx="60" cy="60" r="54" style="stroke-dasharray: 339.29; stroke-dashoffset: 339.29;"></circle>
+                                </svg>
+                                <div class="progress-text">
+                                    <span class="progress-percentage" id="completionPercentage">0%</span>
+                                    <span class="progress-label">Complete</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Streak Card -->
+                    <div class="card streak-card">
+                        <div class="card-header">
+                            <h2 class="card-title">Streak</h2>
+                        </div>
+                        <div class="card-body streak-body">
+                            <div class="streak-display">
+                                <span class="streak-number" id="streakCount">0</span>
+                                <span class="streak-label">days</span>
+                            </div>
+                            <p class="streak-subtitle">Keep it going! 🔥</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tasks Section -->
+            <section class="tasks-section">
+                <div class="section-header">
+                    <h2 class="section-title">Today's Tasks</h2>
+                    <span class="task-count" id="taskCount">0 of 0</span>
+                </div>
+
+                <!-- Add Task Form -->
+                <div class="add-task-form">
+                    <input 
+                        type="text" 
+                        id="taskInput" 
+                        class="task-input" 
+                        placeholder="Add a new task..."
+                        autocomplete="off"
+                    >
+                    <button id="addTaskBtn" class="btn btn-primary">Add</button>
+                </div>
+
+                <!-- Tasks List -->
+                <ul class="tasks-list" id="tasksList">
+                    <!-- Tasks will be dynamically inserted here -->
+                </ul>
+
+                <!-- Empty State -->
+                <div class="empty-state" id="emptyState">
+                    <p class="empty-state-text">No tasks yet. Add one to get started!</p>
+                </div>
+            </section>
+
+            <!-- Action Buttons -->
+            <section class="actions-section">
+                <button id="resetDayBtn" class="btn btn-secondary">Reset Day</button>
+                <button id="clearAllBtn" class="btn btn-danger">Clear All</button>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p class="footer-text">Daily Performance Tracker • Stay focused, stay motivated</p>
+        </footer>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
