@@ -21,11 +21,8 @@ function addTask(text) {
     renderTasks();
 }
 
-addTask("Learn JavaScript");
-addTask("Build a to-do app");
 
 //Step 2: Rendering tasks to the page
-
 const taskList = document.getElementById('tasksList');
 
 function renderTasks() {
@@ -38,3 +35,24 @@ function renderTasks() {
         tasksList.append(li);
     });
 }
+
+//Step 3: Input and button elements
+const taskInput = document.getElementById('taskInput');
+const addTaskBtn = document.getElementById('addTaskBtn');
+
+addTaskBtn.addEventListener('click', function(){
+    const text = taskInput.value;
+
+    if(text.trim() === '') {
+        return; //don't add empty tasks
+    }
+
+    addTask(text);
+    taskInput.value = ''; //clear input field
+});
+
+taskInput.addEventListener('keydown', function (event){
+    if(event.key === 'Enter'){
+        addTaskBtn.click();
+    }
+});
