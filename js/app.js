@@ -18,6 +18,7 @@ function addTask(text) {
     console.log("Task added: ", task)
     console.log("All tasks: ", tasks)
 
+    saveTasks();
     renderTasks();
 }
 
@@ -56,3 +57,23 @@ taskInput.addEventListener('keydown', function (event){
         addTaskBtn.click();
     }
 });
+
+
+//Step 4: save and load tasks with local storage
+
+const STORAGE_KEY = "daily tasks"; //like database
+
+function saveTasks() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks)); //converts js array -> string
+}
+
+function loadTasks() {
+    const storedTasks = localStorage.getItem(STORAGE_KEY);
+
+    if(storedTasks) {
+        tasks = JSON.parse(storedTasks); //converts string -> js array
+    }
+}
+
+loadTasks();
+renderTasks();
