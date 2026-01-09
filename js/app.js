@@ -22,6 +22,20 @@ function addTask(text) {
     renderTasks();
 }
 
+function toggleTask(taskId) {
+    tasks = tasks.map(function (task) {
+        if (task.id === taskId) {
+            return {
+                ...task,
+                completed: !task.completed
+            };
+        }
+        return task;
+    });
+
+    saveTasks();
+    renderTasks();
+}
 
 //Step 2: Rendering tasks to the page
 const taskList = document.getElementById('tasksList');
@@ -30,9 +44,30 @@ function renderTasks() {
     //Clear the list
     tasksList.innerHTML = '';
 
+    //Step 5: add checkboxes and visual feedback
     tasks.forEach(function (task) {
         const li = document.createElement('li');
-        li.textContent = task.text;
+
+        // Chekcbox
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = task.completed;
+
+        checkbox.addEventListener("change", function () {
+            toggleTask(task.id);
+        });
+
+        // Task text
+        const span = document.createElement("span");
+        span.textContent = task.text;
+
+        //visual feedback for completed task
+        if (task.completed) {
+            li.style.textDecoration = "line-through";
+        }
+
+        li.append(checkbox);
+        li.append(span);
         tasksList.append(li);
     });
 }
