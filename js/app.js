@@ -37,6 +37,15 @@ function toggleTask(taskId) {
     renderTasks();
 }
 
+function deleteTask(taskId) {
+    tasks = tasks.filter(function (task) {
+        return task.id !== taskId;
+    });
+
+    saveTasks();
+    renderTasks();
+}
+
 //Step 2: Rendering tasks to the page
 const taskList = document.getElementById('tasksList');
 
@@ -66,8 +75,15 @@ function renderTasks() {
             li.style.textDecoration = "line-through";
         }
 
-        li.append(checkbox);
-        li.append(span);
+        // Step 6: Delete button
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "X";
+
+        deleteBtn.addEventListener("click", function () {
+            deleteTask(task.id);
+        });
+
+        li.append(checkbox, span, deleteBtn);
         tasksList.append(li);
     });
 }
