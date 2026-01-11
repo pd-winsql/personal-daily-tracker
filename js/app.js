@@ -13,6 +13,8 @@ let tasks = [];
 const taskList = document.getElementById('tasksList');
 const taskInput = document.getElementById('taskInput');
 const addTaskBtn = document.getElementById('addTaskBtn');
+const completionPercentage = document.getElementById('completionPercentage');
+const progressRingFill = document.querySelector('.progress-ring-fill');
 
 // ========================
 // Storage
@@ -57,8 +59,10 @@ function addTask(text) {
     tasks.push(task);
     console.log("Task added: ", task)
     console.log("All tasks: ", tasks)
+
     saveTasks();
     renderTasks();
+    updateProgress();
 }
 
 function toggleTask(taskId) {
@@ -71,16 +75,20 @@ function toggleTask(taskId) {
         }
         return task;
     });
+
     saveTasks();
     renderTasks();
+    updateProgress();
 }
 
 function deleteTask(taskId) {
     tasks = tasks.filter(function (task) {
         return task.id !== taskId;
     });
+
     saveTasks();
     renderTasks();
+    updateProgress();
 }
 
 
@@ -155,6 +163,29 @@ taskInput.addEventListener('keydown', function (event){
     }
 });
 
+// ========================
+// Progress Stats
+// ========================
+
+function updateProgress() {
+    const total = tasks.length;
+    const completed = tasks.filter(task => task.completed).length;
+    
+    let percent = 0;
+    if (total > 0) {
+        percent = Math.round((completed / total) * 100);
+    }
+
+    completionPercentage.textContent = percent + '%';
+
+    const radius = 54; //radius of the circle
+    const circumference = 2 * Math.PI * radius;
+    const offset = circumference - (percent / 100) * circumference;
+
+    progressRingFill.style.strokeDasharray = circumference;
+    progressRingFill.style.strokeDashoffset = offset;
+}
+
 
 // ========================
 // Initial Load
@@ -162,3 +193,4 @@ taskInput.addEventListener('keydown', function (event){
 
 loadTasks();
 renderTasks();
+updateProgress();
