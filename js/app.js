@@ -185,19 +185,28 @@ function updateProgress() {
     progressRingFill.style.strokeDashoffset = offset;
 }
 
-
 // ========================
-// Daily Reset at Midnight
+// Helper section
 // ========================
 
-const time = new Date().toLocaleTimeString('en-PH', { hour12: false });
 
-if (time === "00:00:00") {
-    tasks.completed = false;
-    
-    saveTasks();
-    renderTasks();
-    updateProgress();
+
+function getTodayDate() {
+    return new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+}
+
+function resetTasksForNewDay() {
+    const today = getTodayDate();
+    const lastActivceDate = localStorage.getItem('lastActiveDate');
+
+    if (lastActivceDate !== today) {
+        tasks = tasks.map(task => ({
+            ...task,
+            completed: false
+        }));
+        localStorage.setItem("lastActiveDate", today);
+        saveTasks();
+    }
 }
 
 // ========================
@@ -205,5 +214,6 @@ if (time === "00:00:00") {
 // ========================
 
 loadTasks();
+resetTasksForNewDay();
 renderTasks();
 updateProgress();
