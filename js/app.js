@@ -2,7 +2,7 @@
 // State
 // ========================
 
-//Step 1: Data model (in-memory storage)
+// Data model (in-memory storage)
 // Array to hold all tasks
 let tasks = [];
 
@@ -23,7 +23,7 @@ const progressRingFill = document.querySelector('.progress-ring-fill');
 
 const STORAGE_KEY = "daily tasks"; //like database
 
-//Step 4: save and load tasks with local storage
+// save and load tasks with local storage
 function saveTasks() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks)); //converts js array -> string
 }
@@ -96,12 +96,12 @@ function deleteTask(taskId) {
 // Rendering
 // ========================
 
-//Step 2: Rendering tasks to the page
+// Rendering tasks to the page
 function renderTasks() {
     //Clear the list
     tasksList.innerHTML = '';
 
-    //Step 5: add checkboxes and visual feedback
+    //checkboxes and visual feedback
     tasks.forEach(function (task) {
         const li = document.createElement("li");
         li.classList.add("task-item");
@@ -127,7 +127,7 @@ function renderTasks() {
             span.style.textDecoration = "line-through";
         }
 
-        // Step 6: Delete button
+        //Delete button
         const deleteBtn = document.createElement("button");
         deleteBtn.classList.add("task-delete");
         deleteBtn.textContent = "X";
@@ -144,7 +144,6 @@ function renderTasks() {
 // ========================
 // Event Listeners
 // ========================
-//Step 3: Input and button elements
 
 addTaskBtn.addEventListener('click', function(){
     const text = taskInput.value;
@@ -186,6 +185,20 @@ function updateProgress() {
     progressRingFill.style.strokeDashoffset = offset;
 }
 
+
+// ========================
+// Daily Reset at Midnight
+// ========================
+
+const time = new Date().toLocaleTimeString('en-PH', { hour12: false });
+
+if (time === "00:00:00") {
+    tasks.completed = false;
+    
+    saveTasks();
+    renderTasks();
+    updateProgress();
+}
 
 // ========================
 // Initial Load
