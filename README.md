@@ -2,104 +2,172 @@
 
 ## Overview
 
-This is a personal project that I am building primarily for my own use. The main goal of this project is to help me stay consistent with my daily activities by tracking my performance in a simple, visual, and motivating way.
+**Daily Performance Tracker** is a personal productivity and habit-building web application that I built primarily for my own daily use. The core goal of this project is to help me stay consistent with my daily activities by tracking progress in a simple, visual, and motivating way.
 
-The idea came from a recurring problem I face: losing motivation to do daily routines and habits. Instead of relying on external apps that don’t fully match my needs, I decided to build my own solution—one that I can improve, customize, and grow alongside my skills as a developer.
+The idea came from a recurring challenge I face: losing motivation and consistency with daily routines. Instead of relying on existing productivity apps that don’t fully align with my needs, I decided to build my own solution—one that I can control, improve, and evolve alongside my growth as a developer.
 
-While this project starts as a personal web application, I plan to evolve it over time and potentially deploy it as a cross-platform application in the future.
+While this project currently exists as a frontend web application, it is intentionally designed in a way that allows future expansion into backend integration and potential cross-platform deployment.
 
 ---
 
 ## Project Purpose
 
-The core purpose of this project is to **encourage daily action through consistency and accountability**.
+The main purpose of this project is to **encourage daily action through structure, visibility, and consistency**, rather than relying on motivation alone.
 
-By turning daily activities into a checklist and tracking completion over time, the application aims to:
+By converting daily routines into a checklist and tracking performance over time, the app aims to:
 
-* Help build positive daily habits
-* Reduce reliance on motivation alone
-* Provide a clear visual record of daily performance
-* Make self-improvement more engaging through light gamification
+- Encourage habit formation through repetition
+- Provide accountability via visible progress
+- Reinforce consistency using positive feedback
+- Gamify self-improvement without pressure or punishment
 
-This project is not meant to be a productivity tool for everyone—at least not initially. It is designed around my own workflow, routines, and challenges, which makes it more meaningful and sustainable for me to use every day.
+This project is tailored to my personal workflow and challenges, making it practical, meaningful, and sustainable for everyday use.
 
 ---
 
-## How It Works (Concept)
+## How It Works
 
-* Users define a set of daily activities
-* Each day presents a checklist of those activities
-* Activities can be marked as completed or incomplete
-* The system tracks daily completion and overall consistency
-* Performance data is summarized to show progress over time
+- Users define a set of daily tasks or activities
+- Each day presents the same checklist
+- Tasks can be marked as completed or incomplete
+- Completion progress is calculated dynamically
+- Tasks automatically reset at the start of a new day
+- Daily completion streaks reward consistency
 
-On top of basic tracking, the project introduces **gamification elements** to reinforce positive behavior rather than punish missed days.
+The system is designed to be simple, predictable, and encouraging.
+
+---
+
+## Current Features (Working)
+
+### Task Management
+- Add new daily tasks
+- Mark tasks as completed or incomplete
+- Delete tasks
+- Tasks persist using browser `localStorage`
+
+### Daily Reset Logic
+- Tasks automatically reset once per day
+- Reset is based on date comparison (not timers)
+- Works even if the app is opened later in the day
+
+### Progress Tracking
+- Real-time completion percentage
+- Visual progress ring using SVG
+- Progress updates immediately on task changes
+
+### Streak System
+- Streak increases when all tasks are completed for the day
+- Streak increments only once per day
+- Missing a day resets the streak
+- Streak data persists across page refreshes
+
+### UI & Layout
+- Clean and minimalist design
+- Logical grouping of checkbox, task text, and delete button
+- Flexbox-based layout for better spacing and readability
 
 ---
 
 ## Gamification Approach
 
-The gamification system is intentionally simple and supportive. The goal is not pressure, but encouragement.
+Gamification in this project is intentionally **lightweight and supportive**.
 
-Planned ideas include:
+The goal is encouragement, not pressure.
 
-* Daily completion streaks
-* Points or experience gained per completed activity
-* Levels or milestones based on consistency
-* Simple achievements (e.g., 7-day streak, first full day completed)
+Current and planned elements include:
 
-These features are designed to reward progress and consistency, even if perfection isn’t achieved every day.
+- Daily completion streaks
+- Visual progress indicators
+- Simple reward-based feedback
+- No penalties for missed days—only positive reinforcement
+
+---
+
+## Tech Stack
+
+### Frontend
+- HTML5
+- CSS3 (Flexbox)
+- Vanilla JavaScript
+
+### Data Storage
+- Browser `localStorage`
+
+Frameworks were intentionally avoided to strengthen JavaScript fundamentals and simplify future backend integration.
+
+---
+
+## Learning Approach (Using ChatGPT as a Mentor)
+
+This project was built using **ChatGPT as a learning mentor**, not as a copy-paste code generator.
+
+The development process focused on:
+
+- Understanding *why* solutions work
+- Building features incrementally from scratch
+- Refactoring messy logic into clean, readable code
+- Debugging errors before asking for guidance
+- Applying real-world programming concepts such as:
+  - State management
+  - Derived state (progress and streaks)
+  - Date-based logic
+  - Separation of concerns
+  - DOM manipulation patterns
+
+ChatGPT was used to:
+- Break problems into manageable steps
+- Explain unfamiliar JavaScript concepts
+- Guide refactoring decisions
+- Encourage best practices and clean structure
+
+This mentorship-style approach significantly improved my confidence in JavaScript and frontend development.
 
 ---
 
 ## Why I Built This
 
-I often struggle with staying motivated to complete daily routines, even when I know they are beneficial. This project is my attempt to solve that problem by:
+I built this project to solve two problems:
 
-* Creating something I will actually use
-* Holding myself accountable through visible progress
-* Practicing discipline both as a user and as a developer
+1. Staying consistent with daily habits
+2. Learning how to build a real, usable application
 
-At the same time, this project serves as a learning experience where I can apply and improve my skills in:
-
-* Frontend and backend development
-* State management and data persistence
-* UI/UX design focused on habit-building
-* Incremental feature development
+By creating something I actually use, I stay motivated both as a user and as a developer. The project reinforces discipline, problem-solving, and incremental learning.
 
 ---
 
 ## Current Status
 
-This project is currently under active development.
+The project is currently at a **stable MVP stage**.
 
-The focus right now is on:
+Completed focus areas:
+- Core functionality
+- Clean and maintainable code structure
+- Daily usability
 
-* Building a clean and functional MVP
-* Keeping the scope manageable
-* Ensuring the app is usable on a daily basis
-
-More advanced features and cross-platform deployment will be considered once the core experience is stable and proven useful.
+The application is functional and usable on a daily basis.
 
 ---
 
 ## Future Plans
 
-Potential future improvements include:
+Planned improvements include:
 
-* Cross-platform support (mobile and desktop)
-* Data visualization (charts, streak history, summaries)
-* Customizable activity weights or priorities
-* Cloud sync and backups
-* Authentication (if expanded beyond personal use)
+- Backend integration (PHP or Supabase)
+- Cloud synchronization across devices
+- Authentication
+- Task history and analytics
+- Longest streak tracking
+- Badges or milestones
+- Cross-platform deployment
 
-These features will be added gradually based on actual usage and necessity, not just ideas.
+Features will be added based on actual usage and necessity.
 
 ---
 
 ## Disclaimer
 
-This is a personal project built for self-improvement and learning. While others are welcome to explore, fork, or adapt it, the design decisions primarily reflect my own needs and goals.
+This is a personal project built for self-improvement and learning. While others are welcome to explore or adapt it, the design decisions primarily reflect my own needs and goals.
 
 ---
 
@@ -107,4 +175,4 @@ This is a personal project built for self-improvement and learning. While others
 
 **Winjemelron Corpuz**
 
-Aspiring developer building projects to improve consistency, discipline, and technical skill.
+Aspiring developer building practical projects focused on consistency, discipline, and continuous learning.
