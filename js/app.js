@@ -15,6 +15,10 @@ const taskInput = document.getElementById('taskInput');
 const addTaskBtn = document.getElementById('addTaskBtn');
 const completionPercentage = document.getElementById('completionPercentage');
 const progressRingFill = document.querySelector('.progress-ring-fill');
+const streakCount = document.getElementById('streakCount');
+
+let currentStreak = Number(localStorage.getItem("currentStreak")) || 0;
+let lastCompletedDate = localStorage.getItem("lastCompletedDate");
 
 // ========================
 // Storage
@@ -87,6 +91,7 @@ function deleteTask(taskId) {
     });
 
     saveTasks();
+    updateStreak();
     renderTasks();
     updateProgress();
 }
@@ -141,6 +146,10 @@ function renderTasks() {
     });
 }
 
+function renderStreak() {
+    streakCount.textContent = currentStreak;
+}
+
 // ========================
 // Event Listeners
 // ========================
@@ -186,7 +195,7 @@ function updateProgress() {
 }
 
 // ========================
-// Helper section
+// Date Helper section
 // ========================
 
 
@@ -197,15 +206,39 @@ function getTodayDate() {
 
 function resetTasksForNewDay() {
     const today = getTodayDate();
-    const lastActivceDate = localStorage.getItem('lastActiveDate');
+    const lastActiveDate = localStorage.getItem('lastActiveDate');
 
-    if (lastActivceDate !== today) {
+    if (lastActiveDate && lastActiveDate !== today) {
+        if (lastCompletedDate !== lastActiveDate) {
+            currentStreak = 0;
+            localStorage.setItem("currentStreak", currentStreak)
+        }
         tasks = tasks.map(task => ({
             ...task,
             completed: false
         }));
         localStorage.setItem("lastActiveDate", today);
         saveTasks();
+    }
+
+    if (!lastActiveDate) {
+        localStorage.setItem("lastActiveDate", today);
+    }
+}
+
+function areAllTasksCompleted() {
+    return tasks.length > 0 && tasks.every(task => task.completed);
+}
+
+function updateStreak() {
+    const today = getTodayDate();
+
+    if (areAllTasksCompleted() && lastCompletedDate !== today) {
+        currentStreak += 1;
+        lastCompletedDate = today;
+
+        localStorage.setItem("currentStreak", currentStreak);
+        localStorage.setItem("lastCompletedDate", today);
     }
 }
 
@@ -215,5 +248,7 @@ function resetTasksForNewDay() {
 
 loadTasks();
 resetTasksForNewDay();
+updateStreak();
+renderStreak();
 renderTasks();
 updateProgress();
