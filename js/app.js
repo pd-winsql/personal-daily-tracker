@@ -16,6 +16,8 @@ const addTaskBtn = document.getElementById('addTaskBtn');
 const completionPercentage = document.getElementById('completionPercentage');
 const progressRingFill = document.querySelector('.progress-ring-fill');
 const streakCount = document.getElementById('streakCount');
+const taskDaySelect = document.getElementById('taskDaySelect');
+const clearAllBtn = document.getElementById('clearAllBtn');
 
 let currentStreak = Number(localStorage.getItem("currentStreak")) || 0;
 let lastCompletedDate = localStorage.getItem("lastCompletedDate");
@@ -47,7 +49,8 @@ function loadTasks() {
 function createTask(text) {
     return {
         id: Date.now(),     //unique number
-        text: text,         //task desc
+        text: text,    
+        day: taskDaySelect.value,    //task desc
         completed: false    //default state
     };
 }
@@ -106,44 +109,47 @@ function renderTasks() {
     //Clear the list
     tasksList.innerHTML = '';
 
+    const today = getTodayDay();
     //checkboxes and visual feedback
-    tasks.forEach(function (task) {
-        const li = document.createElement("li");
-        li.classList.add("task-item");
+    tasks
+        .filter(task => task.day === today)
+        .forEach(function (task) {
+            const li = document.createElement("li");
+            li.classList.add("task-item");
 
-        const leftGroup = document.createElement("div");
-        leftGroup.classList.add("task-left");
+            const leftGroup = document.createElement("div");
+            leftGroup.classList.add("task-left");
 
-        // Chekcbox
-        const checkbox = document.createElement("input");
-        checkbox.classList.add("task-checkbox");
-        checkbox.type = "checkbox";
-        checkbox.checked = task.completed;
-        checkbox.addEventListener("change", function () {
-            toggleTask(task.id);
+            // Chekcbox
+            const checkbox = document.createElement("input");
+            checkbox.classList.add("task-checkbox");
+            checkbox.type = "checkbox";
+            checkbox.checked = task.completed;
+            checkbox.addEventListener("change", function () {
+                toggleTask(task.id);
+            });
+
+            // Task text
+            const span = document.createElement("span");
+            span.classList.add("task-text");
+            span.textContent = task.text;
+            //visual feedback for completed task
+            if (task.completed) {
+                span.style.textDecoration = "line-through";
+            }
+
+            //Delete button
+            const deleteBtn = document.createElement("button");
+            deleteBtn.classList.add("task-delete");
+            deleteBtn.textContent = "X";
+            deleteBtn.addEventListener("click", function () {
+                deleteTask(task.id);
+            });
+
+            leftGroup.append(checkbox, span);
+            li.append(leftGroup, deleteBtn);
+            tasksList.append(li);
         });
-
-        // Task text
-        const span = document.createElement("span");
-        span.classList.add("task-text");
-        span.textContent = task.text;
-        //visual feedback for completed task
-        if (task.completed) {
-            span.style.textDecoration = "line-through";
-        }
-
-        //Delete button
-        const deleteBtn = document.createElement("button");
-        deleteBtn.classList.add("task-delete");
-        deleteBtn.textContent = "X";
-        deleteBtn.addEventListener("click", function () {
-            deleteTask(task.id);
-        });
-
-        leftGroup.append(checkbox, span);
-        li.append(leftGroup, deleteBtn);
-        tasksList.append(li);
-    });
 }
 
 function renderStreak() {
@@ -171,14 +177,24 @@ taskInput.addEventListener('keydown', function (event){
     }
 });
 
+clearAllBtn.addEventListener('click', function(){
+    tasks = [];
+    saveTasks();
+    renderTasks();
+    updateProgress();
+});
+
+
+
 // ========================
 // Progress Stats
 // ========================
 
 function updateProgress() {
-    const total = tasks.length;
-    const completed = tasks.filter(task => task.completed).length;
-    
+    const tasksToday = todayTasks();
+    const total = tasksToday.length;
+    const completed = tasksToday.filter(task => task.completed).length;
+
     let percent = 0;
     if (total > 0) {
         percent = Math.round((completed / total) * 100);
@@ -227,7 +243,8 @@ function resetTasksForNewDay() {
 }
 
 function areAllTasksCompleted() {
-    return tasks.length > 0 && tasks.every(task => task.completed);
+    const tasksToday = todayTasks();
+    return tasksToday.length > 0 && tasksToday.every(task => task.completed);
 }
 
 function updateStreak() {
@@ -241,6 +258,19 @@ function updateStreak() {
         localStorage.setItem("lastCompletedDate", today);
     }
 }
+
+function getTodayDay() {
+    const days = [
+        "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+    ];
+    return days[new Date().getDay()];
+}
+    
+function todayTasks() {
+    const today = getTodayDay();
+    return tasks.filter(task => task.day === today);
+}
+
 
 // ========================
 // Initial Load
