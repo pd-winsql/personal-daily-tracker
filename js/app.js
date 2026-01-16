@@ -229,10 +229,15 @@ function resetTasksForNewDay() {
             currentStreak = 0;
             localStorage.setItem("currentStreak", currentStreak)
         }
-        tasks = tasks.map(task => ({
-            ...task,
-            completed: false
-        }));
+        tasks = tasks.map(task => {
+            if (task.day === getTodayDay()) {
+                return {
+                    ...task,
+                    completed: false
+                };
+            }
+            return task;
+        });
         localStorage.setItem("lastActiveDate", today);
         saveTasks();
     }
