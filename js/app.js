@@ -5,6 +5,8 @@
 // Data model (in-memory storage)
 // Array to hold all tasks
 let tasks = [];
+let currentStreak = Number(localStorage.getItem("currentStreak")) || 0;
+let lastCompletedDate = localStorage.getItem("lastCompletedDate");
 
 // ========================
 // DOM Elements
@@ -19,8 +21,7 @@ const streakCount = document.getElementById('streakCount');
 const taskDaySelect = document.getElementById('taskDaySelect');
 const clearAllBtn = document.getElementById('clearAllBtn');
 
-let currentStreak = Number(localStorage.getItem("currentStreak")) || 0;
-let lastCompletedDate = localStorage.getItem("lastCompletedDate");
+
 
 // ========================
 // Storage
@@ -42,6 +43,31 @@ function loadTasks() {
 }
 
 // ========================
+// Helper Functions
+// ========================
+
+function getTodayDate() {
+    return new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+}
+
+function getTodayDay() {
+    const days = [
+        "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+    ];
+    return days[new Date().getDay()];
+}
+    
+function todayTasks() {
+    const todayDay = getTodayDay();
+    return tasks.filter(task => task.day === todayDay);
+}
+
+function areAllTasksCompleted() {
+    const tasksToday = todayTasks();
+    return tasksToday.length > 0 && tasksToday.every(task => task.completed);
+}
+
+// ========================
 // Task Factory
 // ========================
 
@@ -57,7 +83,7 @@ function createTask(text) {
 
 
 // ========================
-// CRUD Operations
+// State Mutations / CRUD (Business Logic) 
 // ========================
 
 // add a task in the array
@@ -86,6 +112,7 @@ function toggleTask(taskId) {
     saveTasks();
     renderTasks();
     updateProgress();
+    updateStreak();
 }
 
 function deleteTask(taskId) {
@@ -99,7 +126,46 @@ function deleteTask(taskId) {
     updateProgress();
 }
 
+function resetTasksForNewDay() {
+    const todayDate = getTodayDate();
+    const todayDay = getTodayDay();
 
+    const lastActiveDate = localStorage.getItem('lastActiveDate');
+
+    if (lastActiveDate && lastActiveDate !== todayDate) {
+        if (lastCompletedDate !== lastActiveDate) {
+            currentStreak = 0;
+            localStorage.setItem("currentStreak", currentStreak)
+        }
+        tasks = tasks.map(task => {
+            if (task.day === todayDay) {
+                return {
+                    ...task,
+                    completed: false
+                };
+            }
+            return task;
+        });
+        localStorage.setItem("lastActiveDate", todayDate);
+        saveTasks();
+    }
+
+    if (!lastActiveDate) {
+        localStorage.setItem("lastActiveDate", todayDate);
+    }
+}
+
+function updateStreak() {
+    const today = getTodayDate();
+
+    if (areAllTasksCompleted() && lastCompletedDate !== today) {
+        currentStreak += 1;
+        lastCompletedDate = today;
+
+        localStorage.setItem("currentStreak", currentStreak);
+        localStorage.setItem("lastCompletedDate", today);
+    }
+}
 
 
 // ========================
@@ -111,12 +177,14 @@ function renderTasks() {
     //Clear the list
     tasksList.innerHTML = '';
 
+    const tasksToday = todayTasks();
+
     //checkboxes and visual feedback
-    if (todayTasks().length === 0) {
+    if (tasksToday.length === 0) {
         noTasksMessage();
         return;
     } else {
-        tasks.forEach(function (task) {
+        tasksToday.forEach(function (task) {
             const li = document.createElement("li");
             li.classList.add("task-item");
 
@@ -160,6 +228,13 @@ function renderStreak() {
     streakCount.textContent = currentStreak;
 }
 
+function noTasksMessage() {
+    const p = document.createElement("p");
+    p.classList.add("task-no-tasks");
+    p.textContent = "No tasks for today! Add some tasks to get started.";
+    tasksList.append(p);
+}
+
 // ========================
 // Event Listeners
 // ========================
@@ -187,7 +262,6 @@ clearAllBtn.addEventListener('click', function(){
     renderTasks();
     updateProgress();
 });
-
 
 
 // ========================
@@ -218,74 +292,11 @@ function updateProgress() {
 // Date Helper section
 // ========================
 
-function noTasksMessage() {
-    const p = document.createElement("p");
-    p.classList.add("task-no-tasks");
-    p.textContent = "No tasks for today! Add some tasks to get started.";
-    tasksList.append(p);
-}
 
-function getTodayDate() {
-    return new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-}
 
-function getTodayDay() {
-    const days = [
-        "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
-    ];
-    return days[new Date().getDay()];
-}
-    
-function todayTasks() {
-    const todayDay = getTodayDay();
-    return tasks.filter(task => task.day === todayDay);
-}
 
-function resetTasksForNewDay() {
-    const todayDate = getTodayDate();
-    const todayDay = getTodayDay();
 
-    const lastActiveDate = localStorage.getItem('lastActiveDate');
 
-    if (lastActiveDate && lastActiveDate !== todayDate) {
-        if (lastCompletedDate !== lastActiveDate) {
-            currentStreak = 0;
-            localStorage.setItem("currentStreak", currentStreak)
-        }
-        tasks = tasks.map(task => {
-            if (task.day === todayDay) {
-                return {
-                    ...task,
-                    completed: false
-                };
-            }
-            return task;
-        });
-        localStorage.setItem("lastActiveDate", today);
-        saveTasks();
-    }
-
-    if (!lastActiveDate) {
-        localStorage.setItem("lastActiveDate", today);
-    }
-}
-
-function areAllTasksCompleted() {
-    const tasksToday = todayTasks();
-    return tasksToday.length > 0 && tasksToday.every(task => task.completed);
-}
-
-function updateStreak() {
-    const today = getTodayDate();
-
-    if (areAllTasksCompleted() && lastCompletedDate !== today) {
-        currentStreak += 1;
-        lastCompletedDate = today;
-
-        localStorage.setItem("currentStreak", currentStreak);
-        localStorage.setItem("lastCompletedDate", today);
-    }
-}
 
 
 
