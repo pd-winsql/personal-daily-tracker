@@ -99,6 +99,13 @@ function deleteTask(taskId) {
     updateProgress();
 }
 
+function noTasksMessage() {
+    const p = document.createElement("p");
+    p.classList.add("task-no-tasks");
+    p.textContent = "No tasks for today! Add some tasks to get started.";
+    tasksList.append(p);
+}
+
 
 // ========================
 // Rendering
@@ -111,9 +118,11 @@ function renderTasks() {
 
     const today = getTodayDay();
     //checkboxes and visual feedback
-    tasks
-        .filter(task => task.day === today)
-        .forEach(function (task) {
+    if (tasks.filter(task => task.day === today).length === 0) {
+        noTasksMessage();
+        return;
+    } else {
+        tasks.forEach(function (task) {
             const li = document.createElement("li");
             li.classList.add("task-item");
 
@@ -150,6 +159,7 @@ function renderTasks() {
             li.append(leftGroup, deleteBtn);
             tasksList.append(li);
         });
+    }
 }
 
 function renderStreak() {
