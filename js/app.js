@@ -99,12 +99,7 @@ function deleteTask(taskId) {
     updateProgress();
 }
 
-function noTasksMessage() {
-    const p = document.createElement("p");
-    p.classList.add("task-no-tasks");
-    p.textContent = "No tasks for today! Add some tasks to get started.";
-    tasksList.append(p);
-}
+
 
 
 // ========================
@@ -116,9 +111,8 @@ function renderTasks() {
     //Clear the list
     tasksList.innerHTML = '';
 
-    const today = getTodayDay();
     //checkboxes and visual feedback
-    if (tasks.filter(task => task.day === today).length === 0) {
+    if (todayTasks().length === 0) {
         noTasksMessage();
         return;
     } else {
@@ -224,23 +218,42 @@ function updateProgress() {
 // Date Helper section
 // ========================
 
-
+function noTasksMessage() {
+    const p = document.createElement("p");
+    p.classList.add("task-no-tasks");
+    p.textContent = "No tasks for today! Add some tasks to get started.";
+    tasksList.append(p);
+}
 
 function getTodayDate() {
     return new Date().toISOString().split('T')[0]; // YYYY-MM-DD
 }
 
+function getTodayDay() {
+    const days = [
+        "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+    ];
+    return days[new Date().getDay()];
+}
+    
+function todayTasks() {
+    const todayDay = getTodayDay();
+    return tasks.filter(task => task.day === todayDay);
+}
+
 function resetTasksForNewDay() {
-    const today = getTodayDate();
+    const todayDate = getTodayDate();
+    const todayDay = getTodayDay();
+
     const lastActiveDate = localStorage.getItem('lastActiveDate');
 
-    if (lastActiveDate && lastActiveDate !== today) {
+    if (lastActiveDate && lastActiveDate !== todayDate) {
         if (lastCompletedDate !== lastActiveDate) {
             currentStreak = 0;
             localStorage.setItem("currentStreak", currentStreak)
         }
         tasks = tasks.map(task => {
-            if (task.day === getTodayDay()) {
+            if (task.day === todayDay) {
                 return {
                     ...task,
                     completed: false
@@ -274,17 +287,7 @@ function updateStreak() {
     }
 }
 
-function getTodayDay() {
-    const days = [
-        "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
-    ];
-    return days[new Date().getDay()];
-}
-    
-function todayTasks() {
-    const today = getTodayDay();
-    return tasks.filter(task => task.day === today);
-}
+
 
 
 // ========================
