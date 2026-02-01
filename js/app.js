@@ -20,9 +20,10 @@ const progressRingFill = document.querySelector('.progress-ring-fill');
 const streakCount = document.getElementById('streakCount');
 const taskDaySelect = document.getElementById('taskDaySelect');
 const clearAllBtn = document.getElementById('clearAllBtn');
+const currentDateDisplay = document.getElementById('currentDate');
 
 
-
+currentDateDisplay.textContent = getTodayDate() + ' - ' + getTodayDay();
 // ========================
 // Storage
 // ========================
